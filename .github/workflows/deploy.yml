@@ -26,9 +26,9 @@ jobs:
       run: gcloud auth configure-docker --quiet
 
     - name: Build and push container
-        run: |-
-          docker build . -t $IMAGE
-          docker push $IMAGE
+      run: |-
+        docker build . -t $IMAGE
+        docker push $IMAGE
 
     - name: Deploy
       uses: 'google-github-actions/deploy-cloudrun@v0'
