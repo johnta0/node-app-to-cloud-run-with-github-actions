@@ -1,0 +1,37 @@
+on:
+  push:
+    branches:
+      - main
+
+name: Build and Deploy to Cloud Run
+env:
+  IMAGE: asia.gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}
+
+jobs:
+  job_id:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
+    steps:
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        workload_identity_provider: projects/713465744291/locations/global/workloadIdentityPools/cafewifi-pool/providers/cafewifi-provider
+        service_account: cafewifi-service-account@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com
+    - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@main
+      
+    - name: Configure docker to use the gcloud cli
+      run: gcloud auth configure-docker --quiet
+
+    - name: Build and push container
+        run: |-
+          docker build . -t $IMAGE
+          docker push $IMAGE
+
+    - name: Deploy
+      uses: 'google-github-actions/deploy-cloudrun@v0'
+      with:
+        service: ${{ secrets.SERVICE_NAME }}
+        image: $IMAGE
