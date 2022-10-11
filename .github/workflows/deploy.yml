@@ -20,7 +20,7 @@ jobs:
         workload_identity_provider: projects/713465744291/locations/global/workloadIdentityPools/cafewifi-pool/providers/cafewifi-provider
         service_account: cafewifi-service-account@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com
     - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@main
+      uses: google-github-actions/setup-gcloud@main
       
     - name: Configure docker to use the gcloud cli
       run: gcloud auth configure-docker --quiet
