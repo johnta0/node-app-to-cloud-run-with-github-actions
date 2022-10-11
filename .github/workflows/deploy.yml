@@ -8,7 +8,9 @@ env:
   IMAGE: asia.gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}
 
 jobs:
-  job_id:
+  deploy:
+    runs-on: ubuntu-latest
+    
     permissions:
       contents: 'read'
       id-token: 'write'
